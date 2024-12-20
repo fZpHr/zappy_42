@@ -38,76 +38,80 @@ zappy_42/
 ## Project Architecture
 ```mermaid
 graph TD
-    subgraph "Implementation Steps"
-        E1["1. Core Components"] --> E2["2. Map & Resources"]
-        E2 --> E3["3. Network Layer"]
-        E3 --> E4["4. Game Logic"]
-        E4 --> E5["5. Command System"]
-        E5 --> E6["6. Tests & Polish"]
+    %% Main Lib
+    Lib[/"Lib.hpp<br>Central Include System"/]
+    
+    %% Core Layer
+    subgraph CORE ["Core System"]
+        Server["Server<br>● Main game loop<br>● Teams management<br>● Client connections"]
+        GameEngine["GameEngine<br>● Game rules<br>● Win conditions<br>● Event handling"]
+        TimeManager["TimeManager<br>● Time unit management<br>● Action scheduling<br>● Game clock"]
     end
 
-    subgraph "Core Components"
-        Server[["Server Class<br>- Main loop<br>- Component coordination"]]
-        GameEngine[["GameEngine<br>- Game state<br>- Rules<br>- Updates"]]
-        Server --> GameEngine
+    %% Game Layer
+    subgraph GAME ["Game Logic"]
+        Map["Map<br>● Grid management<br>● Resource spawning<br>● Tile information"]
+        Player["Player<br>● Position & Level<br>● Inventory<br>● Actions & Stats"]
+        Team["Team<br>● Team slots<br>● Team objectives<br>● Victory conditions"]
+        Resources["Resources<br>● Resource types<br>● Spawn algorithms<br>● Distribution"]
+        Inventory["Inventory<br>● Resource storage<br>● Item management<br>● Limits"]
     end
 
-    subgraph "Map System"
-        Map[["Map Class<br>- Grid management<br>- Resource distribution"]]
-        Tile[["Tile Class<br>- Resources<br>- Players present"]]
-        Resource[["Resource System<br>- Types<br>- Quantities"]]
-        Map --> Tile
-        Tile --> Resource
+    %% Network Layer
+    subgraph NET ["Network System"]
+        Network["NetworkManager<br>● Client connections<br>● Data distribution<br>● Event handling"]
+        Socket["SocketHandler<br>● Raw data transfer<br>● Connection state<br>● Buffer management"]
+        Protocol["Protocol<br>● Message format<br>● Command syntax<br>● Response format"]
     end
 
-    subgraph "Network Layer"
-        NetworkManager[["NetworkManager<br>- Connection handling<br>- Message distribution"]]
-        ClientConnection[["ClientConnection<br>- Socket management<br>- Message queues"]]
-        Protocol[["Protocol Handler<br>- Message formatting<br>- Command parsing"]]
-        NetworkManager --> ClientConnection
-        NetworkManager --> Protocol
+    %% Command Layer
+    subgraph CMD ["Command System"]
+        CmdHandler["CommandHandler<br>● Command parsing<br>● Validation<br>● Execution"]
+        Actions["Actions<br>● Movement<br>● Resource handling<br>● Elevation"]
     end
 
-    subgraph "Game Logic"
-        Player[["Player Class<br>- Position<br>- Inventory<br>- Level"]]
-        Team[["Team Class<br>- Player groups<br>- Team limits"]]
-        Actions[["Action System<br>- Movement<br>- Collection<br>- Elevation"]]
-        Player --> Team
-        Player --> Actions
-    end
-
-    subgraph "Command System"
-        CommandParser[["Command Parser<br>- Command validation<br>- Execution"]]
-        Commands[["Commands<br>- Movement<br>- Interaction<br>- Information"]]
-        CommandParser --> Commands
-    end
-
-    subgraph "Tests & Tools"
-        UnitTests[["Unit Tests<br>- Component testing<br>- Integration tests"]]
-        Logger[["Logger System<br>- Debug info<br>- Error tracking"]]
-        Config[["Configuration<br>- Game parameters<br>- Network settings"]]
-    end
-
-    %% Connections between components
-    Server --> NetworkManager
+    %% Main Dependencies
+    Lib --> Server
+    Lib --> Network
+    Lib --> Map
+    
+    %% Server Relations
+    Server --> GameEngine
+    Server --> Network
+    Server --> TimeManager
+    
+    %% Game Relations
     GameEngine --> Map
     GameEngine --> Player
-    NetworkManager --> CommandParser
-    Player --> Map
+    Map --> Resources
+    Player --> Team
+    Player --> Inventory
+    
+    %% Network Relations
+    Network --> Socket
+    Network --> Protocol
+    Network --> CmdHandler
+    
+    %% Command Relations
+    CmdHandler --> Actions
+    Actions --> Player
+    Actions --> Map
 
-    %% Priority levels
-    style E1 fill:#f9f,stroke:#333,stroke-width:4px
-    style E2 fill:#ff9,stroke:#333,stroke-width:3px
-    style E3 fill:#9f9,stroke:#333,stroke-width:3px
-    style E4 fill:#99f,stroke:#333,stroke-width:2px
-    style E5 fill:#f99,stroke:#333,stroke-width:2px
-    style E6 fill:#9ff,stroke:#333,stroke-width:1px
-
-    %% Critical path highlighting
-    style Server stroke:#f00,stroke-width:3px
-    style GameEngine stroke:#f00,stroke-width:3px
-    style Map stroke:#f00,stroke-width:3px
-    style NetworkManager stroke:#f00,stroke-width:3px
+    %% Styling
+    classDef lib fill:#1E88E5,stroke:#000,color:#fff,stroke-width:3px
+    classDef core fill:#42A5F5,stroke:#000,color:#000
+    classDef game fill:#66BB6A,stroke:#000,color:#000
+    classDef net fill:#FFA726,stroke:#000,color:#000
+    classDef cmd fill:#EF5350,stroke:#000,color:#000
+    
+    class Lib lib
+    class Server,GameEngine,TimeManager core
+    class Map,Player,Team,Resources,Inventory game
+    class Network,Socket,Protocol net
+    class CmdHandler,Actions cmd
+    
+    %% Link styling
+    linkStyle default stroke:#000,stroke-width:2px
 ```
 
 ## Building the Project
