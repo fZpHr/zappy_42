@@ -1,8 +1,5 @@
 #pragma once
-#include "SocketHandler.hpp"
-#include <boost/asio.hpp>
-#include <memory>
-#include <vector>
+#include "../lib.hpp"
 
 namespace zappy {
     namespace network {

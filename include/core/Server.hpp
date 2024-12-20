@@ -1,8 +1,5 @@
 #pragma once
-#include "Client.hpp"
-#include "../network/NetworkManager.hpp"
-#include <memory>
-#include <vector>
+#include "../lib.hpp"
 
 namespace zappy {
     namespace core {

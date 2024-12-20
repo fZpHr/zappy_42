@@ -1,7 +1,5 @@
 #pragma once
-#include "../network/SocketHandler.hpp"
-#include <memory>
-#include <string>
+#include "../lib.hpp"
 
 namespace zappy {
 	namespace core {

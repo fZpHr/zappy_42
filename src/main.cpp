@@ -1,6 +1,4 @@
-#include "core/Server.hpp"
-#include "utils/Logger.hpp"
-#include <iostream>
+#include "../include/lib.hpp"
 
 int main(int argc, char** argv) {
     try {
