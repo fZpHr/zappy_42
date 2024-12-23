@@ -24,15 +24,19 @@ zappy_42/
 │   │   ├── NetworkManager.cpp
 │   │   └── SocketHandler.cpp
 │   ├── utils/
-│   │   ├── Logger.cpp
-│   │   └── Exception.cpp
+│   │   └── Logger.cpp
 │   └── main.cpp
 └── tests/
-    ├── core/
+    ├── core_tests/
     │   ├── ServerTest.cpp
     │   └── ClientTest.cpp
-    └── network/
-        └── NetworkTest.cpp
+    ├── network_tests/
+    │  ├── NetworkManagerTest.cpp
+    |  └── SocketHandlerTest.cpp
+    ├── utils_tests/
+    │   ├── LoggerTest.cpp
+    |   └── ExceptionTest.cpp
+    └── mainTest.cpp
 ```
 
 ## Project Architecture

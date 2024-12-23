@@ -9,7 +9,6 @@ int main(int argc, char** argv) {
 
         int port = std::stoi(argv[1]);
         zappy::core::Server server(port);
-        
         zappy::utils::Logger::info("Starting server on port " + std::to_string(port));
         server.start();
 

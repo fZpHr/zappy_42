@@ -18,6 +18,8 @@
 #include <cstring>
 #include <sstream>
 #include <fstream>
+#include <string_view>
+#include <poll.h>
 
 // Boost libraries
 #include <boost/asio.hpp>
@@ -43,7 +45,7 @@ namespace sys = boost::system;
 // Project namespace
 namespace zappy {
     // Common types
-    using tcp = asio::ip::tcp;
+    using tcp = boost::asio::ip::tcp;
     using error_code = sys::error_code;
     
     // Smart pointer aliases
@@ -55,7 +57,7 @@ namespace zappy {
     
     // String aliases
     using String = std::string;
-    using StringView = std::string_view;
+    // using StringView = std::string_view;
     
     // Global constants
     namespace constants {
@@ -79,4 +81,4 @@ namespace zappy {
 #define ZAPPY_ERROR(message) ZAPPY_LOG(error, message)
 
 // Version information
-#define ZAPPY_VERSION "1.0.0"
+#define ZAPPY_VERSION "0.0.1"

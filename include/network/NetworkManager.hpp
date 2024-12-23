@@ -1,5 +1,6 @@
 #pragma once
 #include "../lib.hpp"
+#include "../core/Client.hpp" 
 
 namespace zappy {
     namespace network {
@@ -9,6 +10,7 @@ namespace zappy {
                 explicit NetworkManager(int port);
                 void start();
                 void stop();
+                std::shared_ptr<zappy::core::Client> accept();
                 void broadcast(const std::string& message);
 
             private:
