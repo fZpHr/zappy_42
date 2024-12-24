@@ -1,6 +1,6 @@
 #include "../../include/lib.hpp"
 
-zappy::network::SocketHandler::SocketHandler(boost::asio::ip::tcp::socket socket)
+zappy::network::SocketHandler::SocketHandler(boost::asio::ip::tcp::socket socket, size_t id)
     : socket_(std::move(socket)) {
 }
 
@@ -12,7 +12,8 @@ void zappy::network::SocketHandler::async_read() {
             close();
             return;
         }
-        read_buffer_.erase(read_buffer_.size() - 1);
+        std::string message = read_buffer_;
+        read_buffer_.clear();
         async_read();
     });
 }

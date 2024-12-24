@@ -12,12 +12,13 @@ namespace zappy {
                 void stop();
                 std::shared_ptr<zappy::core::Client> accept();
                 void broadcast(const std::string& message);
+                void poll();
 
             private:
                 void accept_connection();
                 boost::asio::io_context io_context_;
                 boost::asio::ip::tcp::acceptor acceptor_;
-                std::vector<std::shared_ptr<SocketHandler>> clients_;
+                std::vector<std::shared_ptr<zappy::core::Client>> clients_;
         };
 
     }
