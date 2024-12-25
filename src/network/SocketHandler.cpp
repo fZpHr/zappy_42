@@ -1,20 +1,22 @@
 #include "../../include/lib.hpp"
 
-zappy::network::SocketHandler::SocketHandler(boost::asio::ip::tcp::socket socket, size_t id)
+zappy::network::SocketHandler::SocketHandler(boost::asio::ip::tcp::socket socket)
     : socket_(std::move(socket)) {
 }
 
-void zappy::network::SocketHandler::async_read() {
+void zappy::network::SocketHandler::async_read(const size_t &id) {
     auto self = shared_from_this();
-    boost::asio::async_read_until(socket_, boost::asio::dynamic_buffer(read_buffer_), '\n', [this, self](const error_code& error
+    boost::asio::async_read_until(socket_, boost::asio::dynamic_buffer(read_buffer_), '\n', [this, self, id](const error_code& error
         , size_t bytes_transferred) {
         if (error) {
             close();
             return;
         }
-        std::string message = read_buffer_;
+        string message = read_buffer_;
+        message.pop_back();
+        ZAPPY_LOG("Received message from " + std::to_string(id) + " : " + message);
         read_buffer_.clear();
-        async_read();
+        async_read(id);
     });
 }
 

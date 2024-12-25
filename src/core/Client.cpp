@@ -4,13 +4,16 @@ zappy::core::Client::Client(std::shared_ptr<network::SocketHandler> socket_handl
     : socket_handler_(socket_handler), id_(next_id_++) {
 }
 
-void zappy::core::Client::send_message(const std::string& message) {
-    zappy::utils::Logger::info("Client " + std::to_string(id_) + " sent message: " + message);
+void zappy::core::Client::send_message_to(const std::string& message) {
+    ZAPPY_LOG("Sending message to client " + std::to_string(id_) + ": " + message);
     socket_handler_->async_write(message);
 }
 
+void zappy::core::Client::receive_message_from() {
+    socket_handler_->async_read(id_);
+}
+
 bool zappy::core::Client::is_connected() const {
-    zappy::utils::Logger::info("Client " + std::to_string(id_) + " is connected");
     return socket_handler_->is_open();
 }
 
@@ -19,7 +22,6 @@ size_t zappy::core::Client::get_id() const {
 }
 
 void zappy::core::Client::disconnect() {
-    zappy::utils::Logger::info("Client " + std::to_string(id_) + " disconnected");
     socket_handler_->close();
 }
 

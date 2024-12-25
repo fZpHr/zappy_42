@@ -20,6 +20,7 @@
 #include <fstream>
 #include <string_view>
 #include <poll.h>
+#include <iomanip>
 
 // Boost libraries
 #include <boost/asio.hpp>
@@ -30,7 +31,6 @@
     #include <boost/test/unit_test.hpp>
 #endif
 
-// Project headers
 #include "utils/Logger.hpp"
 #include "utils/Exception.hpp"
 #include "network/SocketHandler.hpp"
@@ -38,47 +38,35 @@
 #include "core/Client.hpp"
 #include "core/Server.hpp"
 
-// Namespaces aliases for convenience
-namespace asio = boost::asio;
-namespace sys = boost::system;
+using namespace std;
 
-// Project namespace
 namespace zappy {
-    // Common types
-    using tcp = boost::asio::ip::tcp;
-    using error_code = sys::error_code;
-    
-    // Smart pointer aliases
-    template<typename T>
-    using Ptr = std::shared_ptr<T>;
-    
-    template<typename T>
-    using UPtr = std::unique_ptr<T>;
-    
-    // String aliases
-    using String = std::string;
-    // using StringView = std::string_view;
-    
-    // Global constants
-    namespace constants {
+
+    namespace {
         constexpr int DEFAULT_PORT = 4242;
         constexpr int BUFFER_SIZE = 1024;
         constexpr int MAX_CLIENTS = 100;
     }
     
-    // Error codes
-    namespace error {
+    namespace {
         constexpr int SUCCESS = 0;
         constexpr int CONNECTION_ERROR = -1;
         constexpr int INVALID_MESSAGE = -2;
     }
+
+    namespace {
+        const std::string RESET = "\033[0m";
+        const std::string RED = "\033[31m";
+        const std::string GRAY = "\033[90m";
+        const std::string YELLOW = "\033[33m";
+        const std::string GREEN = "\033[32m";
+    }
 }
 
-// Utility macros
-#define ZAPPY_LOG(level, message) zappy::utils::Logger::level(message)
-#define ZAPPY_DEBUG(message) ZAPPY_LOG(debug, message)
-#define ZAPPY_INFO(message) ZAPPY_LOG(info, message)
-#define ZAPPY_ERROR(message) ZAPPY_LOG(error, message)
+#define ZAPPY_LOG(message) zappy::utils::Logger::log(message)
+#define ZAPPY_DEBUG(message) zappy::utils::Logger::debug(message)
+#define ZAPPY_INFO(message) zappy::utils::Logger::info(message)
+#define ZAPPY_ERROR(message) zappy::utils::Logger::error(message)
 
 // Version information
 #define ZAPPY_VERSION "0.0.1"

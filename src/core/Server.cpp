@@ -13,7 +13,7 @@ void zappy::core::Server::signal_handler(int signal) {
 
 void zappy::core::Server::start() {
     running_ = true;
-    zappy::utils::Logger::debug("Starting...");
+    ZAPPY_DEBUG("Starting...");
     network_manager_->start();
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
@@ -22,7 +22,8 @@ void zappy::core::Server::start() {
     signal(SIGPIPE, SIG_IGN);
     while (running_) {
         if (signal_received) {
-            zappy::utils::Logger::info("Received signal. Stopping server...");
+            ZAPPY_INFO("Received signal. Stopping server...");
+            
             stop();
             break;
         }

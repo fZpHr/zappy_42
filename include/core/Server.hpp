@@ -16,7 +16,6 @@ namespace zappy {
                 static void signal_handler(int signal);
 
             private:
-
                 std::unique_ptr<network::NetworkManager> network_manager_;
                 std::vector<std::shared_ptr<Client>> clients_;
                 bool running_;

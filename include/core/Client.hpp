@@ -7,9 +7,11 @@ namespace zappy {
 		class Client {
 			public:
 				explicit Client(std::shared_ptr<network::SocketHandler> socket_handler);
-				void send_message(const std::string& message);
+				void send_message_to(const std::string& message);
+				void receive_message_from();
 				bool is_connected() const;
 				void disconnect();
+				
 				size_t get_id() const;
 
 			private:
