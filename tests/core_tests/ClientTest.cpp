@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 #include "../../include/lib.hpp"
 #include "../../include/network/SocketHandler.hpp"
+#include "../../include/core/Client.hpp"
 
 class ClientTest : public ::testing::Test {
 protected:
     void SetUp() override {
         io_context = std::make_shared<boost::asio::io_context>();
-
         socket = std::make_shared<boost::asio::ip::tcp::socket>(*io_context);
-
         socket_handler = std::make_shared<zappy::network::SocketHandler>(std::move(*socket));
+
+        zappy::core::Client::initialize_available_ids(100);
     }
 
     std::shared_ptr<boost::asio::io_context> io_context;
@@ -30,8 +31,7 @@ TEST_F(ClientTest, InitialState) {
 
 TEST_F(ClientTest, ConnectionStatus) {
     boost::asio::ip::tcp::acceptor acceptor(*io_context);
-    boost::asio::ip::tcp::endpoint endpoint(
-        boost::asio::ip::tcp::v4(), 4242);
+    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 4242);
     acceptor.open(endpoint.protocol());
     acceptor.bind(endpoint);
     acceptor.listen();
@@ -41,7 +41,6 @@ TEST_F(ClientTest, ConnectionStatus) {
     client->disconnect();
     EXPECT_FALSE(client->is_connected());
 }
-
 
 TEST_F(ClientTest, Disconnection) {
     auto client = std::make_shared<zappy::core::Client>(socket_handler);

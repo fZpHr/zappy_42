@@ -21,6 +21,7 @@
 #include <string_view>
 #include <poll.h>
 #include <iomanip>
+#include <set>
 
 // Boost libraries
 #include <boost/asio.hpp>
@@ -70,3 +71,4 @@ namespace zappy {
 
 // Version information
 #define ZAPPY_VERSION "0.0.1"
+

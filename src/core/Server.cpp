@@ -3,6 +3,13 @@
 zappy::core::Server::Server(int port) {
     network_manager_ = std::make_unique<zappy::network::NetworkManager>(port);
     running_ = false;
+    size_t sizeC = MAX_CLIENTS;
+    zappy::core::Client::initialize_available_ids(MAX_CLIENTS);
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
+    signal(SIGQUIT, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGPIPE, SIG_IGN);
 }
 
 std::atomic<bool> zappy::core::Server::signal_received(false);
@@ -12,18 +19,11 @@ void zappy::core::Server::signal_handler(int signal) {
 }
 
 void zappy::core::Server::start() {
-    running_ = true;
-    ZAPPY_DEBUG("Starting...");
     network_manager_->start();
-    signal(SIGINT, signal_handler);
-    signal(SIGTERM, signal_handler);
-    signal(SIGQUIT, signal_handler);
-    signal(SIGABRT, signal_handler);
-    signal(SIGPIPE, SIG_IGN);
+    running_ = true;
     while (running_) {
         if (signal_received) {
             ZAPPY_INFO("Received signal. Stopping server...");
-            
             stop();
             break;
         }

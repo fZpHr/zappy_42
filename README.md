@@ -5,84 +5,83 @@ Build a network-based multiplayer game.
 
 ```mermaid
 graph TD
-    subgraph "Core Infrastructure"
-        A[Project Setup ✓]
-        B[Base Server ✓]
-        C[Socket Management ✓]
-        D[Network Manager ✓]
-        E[Unit Tests ✓]
+    subgraph Mandatory[Mandatory Part]
+        subgraph Constraints[Key Constraints]
+            C1[Single Process]
+            C2[No Threads]
+            C3[10 Max Commands]
+            C4[TCP Protocol]
+            C5[Time Unit - t]
+        end
+
+        subgraph Server[Server Core]
+            S1[Arguments Parser ✓]
+            S2[Socket Handler ✓]
+            S3[Event Loop ✓]
+            S4[Command Buffer]
+            S5[Time Management]
+        end
+
+        subgraph Game[Game Logic]
+            G1[World Generation]
+            G2[Team Management]
+            G3[Resource System]
+            G4[Life System]
+            G5[Egg System]
+        end
+
+        subgraph Commands[Commands t/unit]
+            CM1[Movement - 7/t]
+            CM2[Vision - 7/t]
+            CM3[Objects - 7/t]
+            CM4[Actions - 7/t]
+            CM5[Special]
+        end
+
+        subgraph Protocol[Communication]
+            P1[Welcome]
+            P2[Commands]
+            P3[Responses]
+            P4[Messages]
+        end
+
+        subgraph Clients[Clients]
+            AI1[Team Connection]
+            AI2[Commands]
+            AI3[Behavior]
+            GUI1[2D Map]
+            GUI2[Progress]
+        end
     end
 
-    subgraph "Server Features"
-        F[Event Loop]
-        G[Command Parser]
-        H[Game Logic]
-        I[Map Management]
-        J[Resource System]
-        K[Player Management]
+    subgraph Bonus[Bonus Part]
+        B1[3D Client]
+        B2[Admin Shell]
+        B3[SSL Security]
+        B4[Map Resize]
+        B5[Sound System]
     end
 
-    subgraph "Game Elements"
-        L[Teams]
-        M[Inventory]
-        N[Resources]
-        O[Incantations]
-        P[Time Management]
-    end
-
-    subgraph "Client/AI"
-        Q[AI Logic]
-        R[Path Finding]
-        S[Resource Collection]
-        T[Team Coordination]
-    end
-
-    subgraph "GUI"
-        U[Graphics Engine]
-        V[Map Visualization]
-        W[Player Display]
-        X[Resource View]
-        Y[Game State Monitor]
-    end
-
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    G --> H
-    H --> I
-    I --> J
-    J --> K
-    K --> L
-    L --> M
-    M --> N
-    N --> O
-    O --> P
-    P --> Q
-    Q --> R
-    R --> S
-    S --> T
-    T --> U
-    U --> V
-    V --> W
-    W --> X
-    X --> Y
+    Constraints --> Server
+    Server --> Game
+    Game --> Commands
+    Commands --> Protocol
+    Protocol --> Clients
+    Clients --> Bonus
 
     classDef done fill:#90EE90,color:#000000
     classDef doing fill:#FFB6C1,color:#000000
     classDef todo fill:#D3D3D3,color:#000000
     
-    class A,B,C,D,E done
-    class F doing
-    class G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y todo
+    class S1,S2,S3 done
+    class S4 doing
+    class S5,G1,G2,G3,G4,G5,CM1,CM2,CM3,CM4,CM5,P1,P2,P3,P4,AI1,AI2,AI3,GUI1,GUI2,B1,B2,B3,B4,B5 todo
 ```
 
 ## Project Structure
 ```
 zappy_42/
-├── CMakeLists.txt
+├── Makefile
 ├── include/
 │   ├── core/
 │   │   ├── Server.hpp
@@ -198,17 +197,15 @@ graph TD
 
 ## Building the Project
 ```bash
-mkdir build && cd build
-cmake ..
 make
 ```
 
 ## Running Tests
 ```bash
-./tests/zappy_tests
+make tests
 ```
 
 ## Running the Server
 ```bash
-./zappy_server <port>
+./server <port>
 ```

@@ -22,15 +22,28 @@ void zappy::network::NetworkManager::accept_connection(){
     auto socket = std::make_shared<SocketHandler>(boost::asio::ip::tcp::socket(io_context_));
     acceptor_.async_accept(socket->get_socket(), [this, socket](const error_code& error) {
         if (!error) {
-            auto client = std::make_shared<zappy::core::Client>(socket);
-            clients_.push_back(client);
-            ZAPPY_INFO("Client " + std::to_string(client->get_id()) + " connected from " + socket->get_socket().remote_endpoint().address().to_string());
-            client->send_message_to("Welcome to the server!");
-            client->receive_message_from();
-            if (clients_.size() < MAX_CLIENTS)
+            if (clients_.size() < MAX_CLIENTS) {
+                auto client = std::make_shared<zappy::core::Client>(socket);
+                clients_.push_back(client);
+                ZAPPY_INFO("Client " + std::to_string(client->get_id()) + " connected from " +
+                socket->get_socket().remote_endpoint().address().to_string() + ":" +
+                std::to_string(socket->get_socket().remote_endpoint().port()) +
+                " to " +
+                socket->get_socket().local_endpoint().address().to_string() + ":" +
+                std::to_string(socket->get_socket().local_endpoint().port()));
+                client->send_message_to("Welcome to the server!");
+                client->receive_message_from();
                 accept_connection();
-            else
-                ZAPPY_DEBUG("Max clients reached");
+            }
+            else {
+                ZAPPY_ERROR("Client trying to connect from " +
+                socket->get_socket().remote_endpoint().address().to_string() + ":" +
+                std::to_string(socket->get_socket().remote_endpoint().port()) +
+                " but server is full");
+                socket->async_write("Server is full");
+                socket->close();
+                accept_connection();
+            }
         }
     });
 }
@@ -42,11 +55,12 @@ void zappy::network::NetworkManager::poll() {
             [](const auto& client) {
                 if (!client->is_connected()) {
                     ZAPPY_INFO("Client " + std::to_string(client->get_id()) + " disconnected");
+                    client->disconnect();
                     return true;
                 }
                 return false;
             }
         ),
-        clients_.end()
-    );
+    clients_.end());
+    
 }
