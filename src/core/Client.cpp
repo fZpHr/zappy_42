@@ -7,8 +7,7 @@ zappy::core::Client::Client(std::shared_ptr<network::SocketHandler> socket_handl
 }
 
 void zappy::core::Client::send_message_to(const std::string& message) {
-    ZAPPY_LOG("Sending message to client " + std::to_string(id_) + ": " + message);
-    socket_handler_->async_write(message);
+    socket_handler_->async_write(message, id_);
 }
 
 void zappy::core::Client::receive_message_from() {
@@ -29,7 +28,7 @@ void zappy::core::Client::disconnect() {
 }
 
 void zappy::core::Client::initialize_available_ids(size_t max_clients) {
-    for (size_t i = 0; i < max_clients; ++i) {
+    for (size_t i = 1; i <= max_clients; ++i) {
         available_ids_.insert(i);
     }
 }

@@ -6,7 +6,7 @@ namespace zappy {
 
         class Server {
             public:
-                explicit Server(int port);
+                explicit Server(boost::program_options::variables_map &vm);
                 virtual ~Server() = default;
 
                 void start();
@@ -19,9 +19,9 @@ namespace zappy {
                 std::unique_ptr<zappy::network::NetworkManager> network_manager_;
                 std::vector<std::shared_ptr<Client>> clients_;
                 std::set<size_t> available_ids_;
-                bool running_;
+                bool running_ = false;
                 static std::atomic<bool> signal_received;
-
+                const boost::program_options::variables_map settings_;
         };
 
     }

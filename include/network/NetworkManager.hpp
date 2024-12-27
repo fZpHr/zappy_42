@@ -7,7 +7,7 @@ namespace zappy {
 
         class NetworkManager {
             public:
-                explicit NetworkManager(int port);
+                explicit NetworkManager(const size_t port, const size_t max_clients);
                 void start();
                 void stop();
                 std::shared_ptr<zappy::core::Client> accept();
@@ -19,6 +19,7 @@ namespace zappy {
                 boost::asio::io_context io_context_;
                 boost::asio::ip::tcp::acceptor acceptor_;
                 std::vector<std::shared_ptr<zappy::core::Client>> clients_;
+                const size_t max_clients_;
         };
 
     }

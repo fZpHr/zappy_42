@@ -12,21 +12,24 @@ void zappy::network::SocketHandler::async_read(const size_t &id) {
             close();
             return;
         }
+        (void)bytes_transferred;
         string message = read_buffer_;
         message.pop_back();
-        ZAPPY_LOG("Received message from " + std::to_string(id) + " : " + message);
+        TEAM("Client " + to_string(id) + ": " + message);
         read_buffer_.clear();
         async_read(id);
     });
 }
 
-void zappy::network::SocketHandler::async_write(const std::string& message) {
+void zappy::network::SocketHandler::async_write(const std::string& message, const int &id) {
     auto self = shared_from_this();
-    boost::asio::async_write(socket_, boost::asio::buffer(message + '\n'), [this, self](const error_code& error, size_t bytes_transferred) {
+    boost::asio::async_write(socket_, boost::asio::buffer(message + '\n'), [this, self, id, message](const error_code& error, size_t bytes_transferred) {
         if (error) {
             close();
             return;
         }
+        (void)bytes_transferred;
+        LOG("Sending message to Client " + to_string(id) + ": " + message);
     });
 }
 

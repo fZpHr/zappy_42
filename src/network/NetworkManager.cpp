@@ -1,7 +1,7 @@
 #include "../../include/lib.hpp"
 
-zappy::network::NetworkManager::NetworkManager(int port)
-    : acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
+zappy::network::NetworkManager::NetworkManager(const size_t port , const size_t max_clients)
+    : acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), max_clients_(max_clients) {
 }
 
 void zappy::network::NetworkManager::start() {
@@ -20,12 +20,12 @@ void zappy::network::NetworkManager::broadcast(const std::string& message){
 
 void zappy::network::NetworkManager::accept_connection(){
     auto socket = std::make_shared<SocketHandler>(boost::asio::ip::tcp::socket(io_context_));
-    acceptor_.async_accept(socket->get_socket(), [this, socket](const error_code& error) {
+    acceptor_.async_accept(socket->get_socket(), [this, socket](const boost::system::error_code& error) {
         if (!error) {
-            if (clients_.size() < MAX_CLIENTS) {
+            if (clients_.size() < max_clients_) {
                 auto client = std::make_shared<zappy::core::Client>(socket);
                 clients_.push_back(client);
-                ZAPPY_INFO("Client " + std::to_string(client->get_id()) + " connected from " +
+                INFO("Client " + std::to_string(client->get_id()) + " connected from " +
                 socket->get_socket().remote_endpoint().address().to_string() + ":" +
                 std::to_string(socket->get_socket().remote_endpoint().port()) +
                 " to " +
@@ -36,11 +36,11 @@ void zappy::network::NetworkManager::accept_connection(){
                 accept_connection();
             }
             else {
-                ZAPPY_ERROR("Client trying to connect from " +
+                ERROR("Client trying to connect from " +
                 socket->get_socket().remote_endpoint().address().to_string() + ":" +
                 std::to_string(socket->get_socket().remote_endpoint().port()) +
                 " but server is full");
-                socket->async_write("Server is full");
+                socket->async_write("Server is full", -1);
                 socket->close();
                 accept_connection();
             }
@@ -54,7 +54,7 @@ void zappy::network::NetworkManager::poll() {
         std::remove_if(clients_.begin(), clients_.end(),
             [](const auto& client) {
                 if (!client->is_connected()) {
-                    ZAPPY_INFO("Client " + std::to_string(client->get_id()) + " disconnected");
+                    INFO("Client " + std::to_string(client->get_id()) + " disconnected");
                     client->disconnect();
                     return true;
                 }

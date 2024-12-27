@@ -9,10 +9,10 @@ namespace zappy {
 				explicit Client(std::shared_ptr<network::SocketHandler> socket_handler);
 				void send_message_to(const std::string& message);
 				void receive_message_from();
-				bool is_connected() const;
 				void disconnect();
 				
 				size_t get_id() const;
+				bool is_connected() const;
 
 				static void initialize_available_ids(size_t max_clients);
 			private:

@@ -28,7 +28,7 @@ TEST_F(SocketHandlerTest, AsyncReadWrite) {
    
    std::string test_message = "Hello";
    EXPECT_NO_THROW({
-       socket->async_write(test_message);
+       socket->async_write(test_message, 0);
        socket->async_read(0);
    });
 }

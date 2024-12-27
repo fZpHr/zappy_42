@@ -8,7 +8,7 @@ namespace zappy {
 			public:
 				explicit SocketHandler(boost::asio::ip::tcp::socket socket);
 				void async_read(const size_t &id);
-				void async_write(const std::string &message);
+				void async_write(const std::string &message, const int &id);
 				bool is_open() const;
 				void close();
 				boost::asio::ip::tcp::socket& get_socket();

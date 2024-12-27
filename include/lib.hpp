@@ -22,6 +22,8 @@
 #include <poll.h>
 #include <iomanip>
 #include <set>
+#include <boost/program_options.hpp>
+
 
 // Boost libraries
 #include <boost/asio.hpp>
@@ -41,34 +43,12 @@
 
 using namespace std;
 
-namespace zappy {
-
-    namespace {
-        constexpr int DEFAULT_PORT = 4242;
-        constexpr int BUFFER_SIZE = 1024;
-        constexpr int MAX_CLIENTS = 100;
-    }
-    
-    namespace {
-        constexpr int SUCCESS = 0;
-        constexpr int CONNECTION_ERROR = -1;
-        constexpr int INVALID_MESSAGE = -2;
-    }
-
-    namespace {
-        const std::string RESET = "\033[0m";
-        const std::string RED = "\033[31m";
-        const std::string GRAY = "\033[90m";
-        const std::string YELLOW = "\033[33m";
-        const std::string GREEN = "\033[32m";
-    }
-}
-
-#define ZAPPY_LOG(message) zappy::utils::Logger::log(message)
-#define ZAPPY_DEBUG(message) zappy::utils::Logger::debug(message)
-#define ZAPPY_INFO(message) zappy::utils::Logger::info(message)
-#define ZAPPY_ERROR(message) zappy::utils::Logger::error(message)
+#define TEAM(message) zappy::utils::Logger::team(message, id)
+#define LOG(message) zappy::utils::Logger::log(message)
+#define DEBUG(message) zappy::utils::Logger::debug(message)
+#define INFO(message) zappy::utils::Logger::info(message)
+#define ERROR(message) zappy::utils::Logger::error(message)
 
 // Version information
-#define ZAPPY_VERSION "0.0.1"
+#define VERSION "0.0.1"
 

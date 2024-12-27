@@ -7,7 +7,7 @@ protected:
 };
 
 TEST_F(NetworkManagerTest, ConstructorAndStartStop) {
-   zappy::network::NetworkManager manager(TEST_PORT);
+   zappy::network::NetworkManager manager(TEST_PORT, 10);
    std::thread manager_thread([&manager]() {
        manager.start();
    });
@@ -18,7 +18,7 @@ TEST_F(NetworkManagerTest, ConstructorAndStartStop) {
 }
 
 TEST_F(NetworkManagerTest, ClientAcceptance) {
-   zappy::network::NetworkManager manager(TEST_PORT);
+   zappy::network::NetworkManager manager(TEST_PORT, 10);
    std::thread manager_thread([&manager]() {
        manager.start();
    });
