@@ -12,9 +12,11 @@ namespace zappy {
 				bool is_open() const;
 				void close();
 				boost::asio::ip::tcp::socket& get_socket();
+				~SocketHandler();
 			private:
 				boost::asio::ip::tcp::socket socket_;
-				std::string read_buffer_;
+				std::string read_buffer_ {};
+				zappy::core::CommandHandler command_handler_ {};
 		};
 
 	}

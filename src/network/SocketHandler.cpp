@@ -1,7 +1,7 @@
 #include "../../include/lib.hpp"
 
 zappy::network::SocketHandler::SocketHandler(boost::asio::ip::tcp::socket socket)
-    : socket_(std::move(socket)) {
+    : socket_(std::move(socket)), command_handler_() {
 }
 
 void zappy::network::SocketHandler::async_read(const size_t &id) {
@@ -16,6 +16,7 @@ void zappy::network::SocketHandler::async_read(const size_t &id) {
         string message = read_buffer_;
         message.pop_back();
         TEAM("Client " + to_string(id) + ": " + message);
+        command_handler_.execute(message);
         read_buffer_.clear();
         async_read(id);
     });
@@ -45,3 +46,6 @@ boost::asio::ip::tcp::socket& zappy::network::SocketHandler::get_socket() {
     return socket_;
 }
 
+zappy::network::SocketHandler::~SocketHandler() {
+    close();
+}

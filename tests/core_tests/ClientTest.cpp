@@ -12,7 +12,6 @@ protected:
 
         zappy::core::Client::initialize_available_ids(100);
     }
-
     std::shared_ptr<boost::asio::io_context> io_context;
     std::shared_ptr<boost::asio::ip::tcp::socket> socket;
     std::shared_ptr<zappy::network::SocketHandler> socket_handler;

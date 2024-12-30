@@ -12,7 +12,8 @@ OBJ_DIR = obj
 
 SRC_SERVER = src/core/Server.cpp src/core/Client.cpp \
             src/network/NetworkManager.cpp src/network/SocketHandler.cpp \
-            src/utils/Logger.cpp src/main.cpp
+			src/core/CommandHandler.cpp \
+            src/utils/Logger.cpp src/main.cpp 
 
 SRC_CLIENT = src/client/main.cpp
 SRC_GFX = src/gfx/main.cpp

@@ -34,6 +34,7 @@
     #include <boost/test/unit_test.hpp>
 #endif
 
+#include "core/CommandHandler.hpp"
 #include "utils/Logger.hpp"
 #include "utils/Exception.hpp"
 #include "network/SocketHandler.hpp"
