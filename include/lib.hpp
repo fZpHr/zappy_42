@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <set>
 #include <boost/program_options.hpp>
+#include <unordered_set>
 
 
 // Boost libraries
@@ -34,6 +35,8 @@
     #include <boost/test/unit_test.hpp>
 #endif
 
+#include "core/Team.hpp"
+#include "core/Map.hpp"
 #include "core/CommandHandler.hpp"
 #include "utils/Logger.hpp"
 #include "utils/Exception.hpp"
@@ -41,6 +44,7 @@
 #include "network/NetworkManager.hpp"
 #include "core/Client.hpp"
 #include "core/Server.hpp"
+
 
 using namespace std;
 

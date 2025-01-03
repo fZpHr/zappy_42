@@ -1,6 +1,6 @@
 #include "../../include/lib.hpp"
 
-zappy::core::Client::Client(std::shared_ptr<network::SocketHandler> socket_handler) {
+zappy::core::Client::Client(std::shared_ptr<network::SocketHandler> socket_handler, size_t x, size_t y, zappy::core::Team team) : x(x), y(y), team(team) {
     socket_handler_ = socket_handler;
     id_ = *available_ids_.begin();
     available_ids_.erase(id_);

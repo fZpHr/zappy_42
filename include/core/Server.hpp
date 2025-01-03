@@ -22,6 +22,7 @@ namespace zappy {
                 bool running_ = false;
                 static std::atomic<bool> signal_received;
                 const boost::program_options::variables_map settings_;
+                Map map_;
         };
 
     }

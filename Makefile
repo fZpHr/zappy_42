@@ -11,6 +11,7 @@ LDFLAGS = -lboost_system -lboost_program_options -lgtest -lgtest_main
 OBJ_DIR = obj
 
 SRC_SERVER = src/core/Server.cpp src/core/Client.cpp \
+			src/core/Map.cpp src/core/Team.cpp \
             src/network/NetworkManager.cpp src/network/SocketHandler.cpp \
 			src/core/CommandHandler.cpp \
             src/utils/Logger.cpp src/main.cpp 

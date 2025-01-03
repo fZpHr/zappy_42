@@ -1,6 +1,6 @@
 #include "../../include/lib.hpp"
 
-zappy::core::Server::Server(boost::program_options::variables_map &vm): settings_(&vm) {
+zappy::core::Server::Server(boost::program_options::variables_map &vm): settings_(&vm), map_(vm["width"].as<size_t>(), vm["height"].as<size_t>()) {
     network_manager_ = std::make_unique<zappy::network::NetworkManager>(vm["port"].as<size_t>(), vm["clients"].as<size_t>());
     zappy::core::Client::initialize_available_ids(vm["clients"].as<size_t>());
     signal(SIGINT, signal_handler);

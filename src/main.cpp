@@ -1,5 +1,15 @@
 #include "../include/lib.hpp"
 
+bool has_duplicates(const std::vector<std::string>& vec) {
+    std::unordered_set<std::string> set;
+    for (const auto& item : vec) {
+        if (!set.insert(item).second) {
+            return true;
+        }
+    }
+    return false;
+}
+
 int main(int argc, char** argv) {
     try {
         boost::program_options::options_description desc("Allowed options");
@@ -50,6 +60,10 @@ int main(int argc, char** argv) {
         std::vector<std::string> teams = vm["teams"].as<std::vector<std::string>>();
         size_t clients = vm["clients"].as<size_t>();
         size_t num_teams = teams.size();
+        if (has_duplicates(teams)) {
+            ERROR("Duplicate team names are not allowed");
+            return 1;
+        }
         if (clients < num_teams) {
             ERROR("Number of clients must be greater than or equal to the number of teams");
             return 1;
