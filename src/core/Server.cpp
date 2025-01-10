@@ -1,8 +1,8 @@
-#include "../../include/lib.hpp"
+#include "../../include/core/Server.hpp"
 
-zappy::core::Server::Server(boost::program_options::variables_map &vm): settings_(&vm), map_(vm["width"].as<size_t>(), vm["height"].as<size_t>()) {
-    network_manager_ = std::make_unique<zappy::network::NetworkManager>(vm["port"].as<size_t>(), vm["clients"].as<size_t>());
-    zappy::core::Client::initialize_available_ids(vm["clients"].as<size_t>());
+Server::Server(boost::program_options::variables_map &vm): settings_(&vm), map_(vm["width"].as<size_t>(), vm["height"].as<size_t>()) {
+    network_manager_ = std::make_unique<NetworkManager>(vm["port"].as<size_t>(), vm["clients"].as<size_t>(), vm["teams"].as<std::vector<std::string>>());
+    Client::initialize_available_ids(vm["clients"].as<size_t>());
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
     signal(SIGQUIT, signal_handler);
@@ -10,14 +10,14 @@ zappy::core::Server::Server(boost::program_options::variables_map &vm): settings
     signal(SIGPIPE, SIG_IGN);
 }
 
-std::atomic<bool> zappy::core::Server::signal_received(false);
+std::atomic<bool> Server::signal_received(false);
 
-void zappy::core::Server::signal_handler(int signal) {
+void Server::signal_handler(int signal) {
     (void)signal;
     signal_received.store(true);
 }
 
-void zappy::core::Server::start() {
+void Server::start() {
     network_manager_->start();
     running_ = true;
     while (running_) {
@@ -33,7 +33,7 @@ void zappy::core::Server::start() {
     }
 }
 
-void zappy::core::Server::stop() {
+void Server::stop() {
     running_ = false;
     network_manager_->stop();
     for (auto& client : clients_) {
@@ -42,10 +42,10 @@ void zappy::core::Server::stop() {
     clients_.clear();
 }
 
-bool zappy::core::Server::is_running() const {
+bool Server::is_running() const {
     return running_;
 }
 
-size_t zappy::core::Server::get_client_count() const {
+size_t Server::get_client_count() const {
     return clients_.size();
 }

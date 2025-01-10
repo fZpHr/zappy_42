@@ -1,4 +1,4 @@
-#include "../../include/lib.hpp"
+#include "../../include/core/CommandHandler.hpp"
 
 const std::unordered_map<std::string, std::string> COMMANDS = {
     {"Forward", "Forward"},
@@ -15,13 +15,13 @@ const std::unordered_map<std::string, std::string> COMMANDS = {
     {"Incantation", "Incantation"}
 };
 
-zappy::core::CommandHandler::CommandHandler() {
+CommandHandler::CommandHandler() {
    for (const auto& command : COMMANDS) {
        list_commands_[command.first] = [msg = command.second]() { INFO(msg); };
    }
 }
 
-void zappy::core::CommandHandler::execute(const std::string& command) {
+void CommandHandler::execute(const std::string& command) {
    auto it = list_commands_.find(command);
    if (it != list_commands_.end()) {
        it->second();

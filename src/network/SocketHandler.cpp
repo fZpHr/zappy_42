@@ -1,10 +1,10 @@
-#include "../../include/lib.hpp"
+#include "../../include/network/SocketHandler.hpp"
 
-zappy::network::SocketHandler::SocketHandler(boost::asio::ip::tcp::socket socket)
+SocketHandler::SocketHandler(boost::asio::ip::tcp::socket socket)
     : socket_(std::move(socket)), command_handler_() {
 }
 
-void zappy::network::SocketHandler::async_read(const size_t &id) {
+void SocketHandler::async_read(const size_t &id) {
     auto self = shared_from_this();
     boost::asio::async_read_until(socket_, boost::asio::dynamic_buffer(read_buffer_), '\n', [this, self, id](const error_code& error
         , size_t bytes_transferred) {
@@ -22,7 +22,7 @@ void zappy::network::SocketHandler::async_read(const size_t &id) {
     });
 }
 
-void zappy::network::SocketHandler::async_write(const std::string& message, const int &id) {
+void SocketHandler::async_write(const std::string& message, const int &id) {
     auto self = shared_from_this();
     boost::asio::async_write(socket_, boost::asio::buffer(message + '\n'), [this, self, id, message](const error_code& error, size_t bytes_transferred) {
         if (error) {
@@ -34,18 +34,18 @@ void zappy::network::SocketHandler::async_write(const std::string& message, cons
     });
 }
 
-bool zappy::network::SocketHandler::is_open() const {
+bool SocketHandler::is_open() const {
     return socket_.is_open();
 }
 
-void zappy::network::SocketHandler::close() {
+void SocketHandler::close() {
     socket_.close();
 }
 
-boost::asio::ip::tcp::socket& zappy::network::SocketHandler::get_socket() {
+boost::asio::ip::tcp::socket& SocketHandler::get_socket() {
     return socket_;
 }
 
-zappy::network::SocketHandler::~SocketHandler() {
+SocketHandler::~SocketHandler() {
     close();
 }

@@ -1,4 +1,4 @@
-#include "../../include/lib.hpp"
+#include "../../include/utils/Logger.hpp"
 
 const std::string RESET = "\033[0m";
 const std::string BLACK = "\033[30m";
@@ -24,37 +24,37 @@ const std::string LIGHT_MAGENTA = "\033[95m";
 const std::string DARK_CYAN = "\033[36m";
 const std::string LIGHT_CYAN = "\033[96m";
 
-std::unordered_map<size_t, std::string> zappy::utils::Logger::id_color_map;
-std::vector<std::string> zappy::utils::Logger::colors = {
+std::unordered_map<size_t, std::string> Logger::id_color_map;
+std::vector<std::string> Logger::colors = {
     BLUE, MAGENTA, CYAN, WHITE, GRAY,
     LIGHT_GRAY, DARK_RED, LIGHT_RED, DARK_GREEN, LIGHT_GREEN,
     DARK_YELLOW, LIGHT_YELLOW, DARK_BLUE, LIGHT_BLUE,
     DARK_MAGENTA, LIGHT_MAGENTA, DARK_CYAN, LIGHT_CYAN
 };
-size_t zappy::utils::Logger::color_index = 0;
+size_t Logger::color_index = 0;
 
-void zappy::utils::Logger::team(const std::string &message, const size_t &id) {
-    log_handler("TEAM " + to_string(id), message, id);
+void Logger::team(const std::string &message, const size_t &id) {
+    log_handler("TEAM " +  std::to_string(id), message, id);
 }
 
-void zappy::utils::Logger::info(const std::string &message, const size_t &id) {
+void Logger::info(const std::string &message, const size_t &id) {
     log_handler("INFO", message, id);
 }
 
-void zappy::utils::Logger::error(const std::string &message, const size_t &id) {
+void Logger::error(const std::string &message, const size_t &id) {
     log_handler("ERROR", message, id);
 }
 
-void zappy::utils::Logger::debug(const std::string &message, const size_t &id) {
+void Logger::debug(const std::string &message, const size_t &id) {
     log_handler("DEBUG", message, id);
 }
 
-void zappy::utils::Logger::log(const std::string &message, const size_t &id) {
+void Logger::log(const std::string &message, const size_t &id) {
     log_handler("LOG", message, id);
 }
 
-void zappy::utils::Logger::log_handler(const std::string& level, const std::string& message, const size_t &id) {
-    string color;
+void Logger::log_handler(const std::string& level, const std::string& message, const size_t &id) {
+     std::string color;
     bool error = false;
     if (id == 0) {
         if (level == "INFO") {
@@ -83,7 +83,7 @@ void zappy::utils::Logger::log_handler(const std::string& level, const std::stri
     }
 }
 
-std::string zappy::utils::Logger::get_current_time() {
+std::string Logger::get_current_time() {
     auto now = std::chrono::system_clock::now();
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
     auto now_tm = *std::localtime(&now_time_t);

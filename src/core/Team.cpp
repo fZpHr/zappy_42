@@ -1,14 +1,23 @@
-#include "../../include/lib.hpp"
+#include "../../include/core/Team.hpp"
 
-zappy::core::Team::Team(const std::string& name, size_t x, size_t y, size_t id) : name_(name), x(x), y(y), id(id) {}
+Team::Team(const std::string &name, size_t x, size_t y, size_t id) : name_(name), x_(x), y_(y), id_(id) {
+}
 
 
-const std::string& zappy::core::Team::get_name() const {
+std::string Team::get_name() const {
     return name_;
 }
 
-size_t zappy::core::Team::get_id() const {
-    return id;
+size_t Team::get_id() const {
+    return id_;
+}
+
+size_t Team::get_x() const {
+    return x_;
+}
+
+size_t Team::get_y() const {
+    return y_;
 }
 
 

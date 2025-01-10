@@ -11,7 +11,7 @@ TEST_F(SocketHandlerTest, SocketOperations) {
         boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242));
     acceptor.listen();
 
-    auto socket = std::make_shared<zappy::network::SocketHandler>(
+    auto socket = std::make_shared<SocketHandler>(
         boost::asio::ip::tcp::socket(io_context));
     socket->get_socket().connect(
         boost::asio::ip::tcp::endpoint(
@@ -23,7 +23,7 @@ TEST_F(SocketHandlerTest, SocketOperations) {
 }
 
 TEST_F(SocketHandlerTest, AsyncReadWrite) {
-   auto socket = std::make_shared<zappy::network::SocketHandler>(
+   auto socket = std::make_shared<SocketHandler>(
        boost::asio::ip::tcp::socket(io_context));
    
    std::string test_message = "Hello";

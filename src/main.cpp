@@ -1,4 +1,8 @@
-#include "../include/lib.hpp"
+#include "../include/core/Server.hpp"
+#include "../include/utils/Logger.hpp"
+#include <boost/program_options.hpp>
+#include <unordered_set>
+
 
 bool has_duplicates(const std::vector<std::string>& vec) {
     std::unordered_set<std::string> set;
@@ -74,13 +78,13 @@ int main(int argc, char** argv) {
             clients = adjusted_clients;
         }
 
-        zappy::core::Server server(vm);
-        zappy::utils::Logger::info("Starting server on port " + to_string(vm["port"].as<size_t>()) + " with " + to_string(clients) + " slots" + " and " + to_string(num_teams) + " teams");
+        Server server(vm);
+        Logger::info("Starting server on port " + to_string(vm["port"].as<size_t>()) + " with " + to_string(clients) + " slots" + " and " + to_string(num_teams) + " teams");
         server.start();
 
         return 0;
     } catch (const std::exception& e) {
-        zappy::utils::Logger::error("Error " + std::string(e.what()));
+        Logger::error("Error " + std::string(e.what()));
         return 1;
     }
 }
