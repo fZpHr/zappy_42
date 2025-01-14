@@ -13,7 +13,7 @@ class SocketHandler : public std::enable_shared_from_this<SocketHandler> {
 		bool is_open() const;
 		void close();
 		boost::asio::ip::tcp::socket& get_socket();
-		~SocketHandler();
+		virtual ~SocketHandler();
 	private:
 		boost::asio::ip::tcp::socket socket_;
 		std::string read_buffer_ {};

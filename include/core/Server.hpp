@@ -23,12 +23,13 @@ class Server {
         
 
     private:
-        std::unique_ptr<NetworkManager> network_manager_;
         std::vector<std::shared_ptr<Client>> clients_;
+        std::vector<std::shared_ptr<Team>> teams_;
         std::set<size_t> available_ids_;
         bool running_ = false;
         static std::atomic<bool> signal_received;
         const boost::program_options::variables_map settings_;
         Map map_;
+        std::unique_ptr<NetworkManager> network_manager_;
         
 };

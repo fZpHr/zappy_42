@@ -1,7 +1,8 @@
 #include "../../include/network/NetworkManager.hpp"
 
-NetworkManager::NetworkManager(const size_t port , const size_t max_clients, const vector<string> &teams)
+NetworkManager::NetworkManager(const size_t port , const size_t &max_clients, const std::vector<std::shared_ptr<Team>> &teams)
     : acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), max_clients_(max_clients), teams_(teams) {
+
 }
 
 void NetworkManager::start() {
@@ -22,8 +23,17 @@ void NetworkManager::accept_connection(){
     auto socket = std::make_shared<SocketHandler>(boost::asio::ip::tcp::socket(io_context_));
     acceptor_.async_accept(socket->get_socket(), [this, socket](const boost::system::error_code& error) {
         if (!error) {
-            if (clients_.size() < max_clients_) {
-                auto client = std::make_shared<Client>(socket, Team(teams_[max_clients_ - clients_.size() - 1],0,0,0));
+            if (clients_.size() < max_clients_ ) {
+                auto client = std::make_shared<Client>(socket);
+                size_t team_index = client->get_id() % teams_.size();
+                if (team_index >= teams_.size()) {
+                    cout << teams_.size() << " ," << team_index << endl;
+                    ERROR("Team index out of bounds");
+                    socket->close();
+                    accept_connection();
+                    return;
+                }
+                client->set_team(*teams_[team_index]);
                 clients_.push_back(client);
                 INFO("Client " + std::to_string(client->get_id()) + " connected from " +
                 socket->get_socket().remote_endpoint().address().to_string() + ":" +
@@ -31,7 +41,7 @@ void NetworkManager::accept_connection(){
                 " to " +
                 socket->get_socket().local_endpoint().address().to_string() + ":" +
                 std::to_string(socket->get_socket().local_endpoint().port()));
-                client->send_message_to("Welcome to the server!");
+                client->send_message_to("Welcome to the server, your team is " + client->get_team_name());
                 client->receive_message_from();
                 accept_connection();
             }

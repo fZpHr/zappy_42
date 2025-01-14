@@ -1,8 +1,7 @@
 #include "../../include/core/Team.hpp"
 
-Team::Team(const std::string &name, size_t x, size_t y, size_t id) : name_(name), x_(x), y_(y), id_(id) {
+Team::Team(const std::string &name, size_t id) : name_(name), id_(id) {
 }
-
 
 std::string Team::get_name() const {
     return name_;
@@ -20,6 +19,13 @@ size_t Team::get_y() const {
     return y_;
 }
 
+void Team::set_x(size_t x) {
+    x_ = x;
+}
+
+void Team::set_y(size_t y) {
+    y_ = y;
+}
 
 
 

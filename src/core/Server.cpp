@@ -1,7 +1,11 @@
 #include "../../include/core/Server.hpp"
 
-Server::Server(boost::program_options::variables_map &vm): settings_(&vm), map_(vm["width"].as<size_t>(), vm["height"].as<size_t>()) {
-    network_manager_ = std::make_unique<NetworkManager>(vm["port"].as<size_t>(), vm["clients"].as<size_t>(), vm["teams"].as<std::vector<std::string>>());
+Server::Server(boost::program_options::variables_map &vm): settings_(&vm), map_(vm["width"].as<size_t>(), vm["height"].as<size_t>(), clients_, teams_) {
+    auto team_names = vm["teams"].as<std::vector<std::string>>();
+    for (size_t i = 0; i < team_names.size(); i++) {
+        teams_.push_back(std::make_shared<Team>(team_names[i], i));
+    }
+    network_manager_ = std::make_unique<NetworkManager>(vm["port"].as<size_t>(), vm["clients"].as<size_t>(), teams_);
     Client::initialize_available_ids(vm["clients"].as<size_t>());
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);

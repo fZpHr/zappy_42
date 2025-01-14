@@ -1,12 +1,15 @@
 #include "../../include/core/Client.hpp"
 
-Client::Client(std::shared_ptr<SocketHandler> socket_handler, Team crr_team)  {
-    x = crr_team.get_x();
-    y = crr_team.get_y();
-    team_name = crr_team.get_name();
+Client::Client(std::shared_ptr<SocketHandler> socket_handler)  {
     socket_handler_ = socket_handler;
     id_ = *available_ids_.begin();
     available_ids_.erase(id_);
+}
+
+void Client::set_team(Team team) {
+    x = team.get_x();
+    y = team.get_y();
+    team_name = team.get_name();
 }
 
 void Client::send_message_to(const std::string& message) {
@@ -34,6 +37,10 @@ void Client::initialize_available_ids(size_t max_clients) {
     for (size_t i = 1; i <= max_clients; ++i) {
         available_ids_.insert(i);
     }
+}
+
+string Client::get_team_name() const {
+    return team_name;
 }
 
 std::set<size_t> Client::available_ids_;

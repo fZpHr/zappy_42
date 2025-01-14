@@ -5,7 +5,7 @@
 
 class NetworkManager {
     public:
-        explicit NetworkManager(const size_t port, const size_t max_clients, const std::vector<std::string> &teams);
+        explicit NetworkManager(const size_t port, const size_t &max_clients, const std::vector<std::shared_ptr<Team>> &teams);
         void start();
         void stop();
         std::shared_ptr<Client> accept();
@@ -16,7 +16,7 @@ class NetworkManager {
         void accept_connection();
         boost::asio::io_context io_context_;
         boost::asio::ip::tcp::acceptor acceptor_;
-        std::vector<std::shared_ptr<Client>> clients_;
-        std::vector<std::string> teams_; 
         const size_t max_clients_;
+        std::vector<std::shared_ptr<Client>> clients_;
+        std::vector<std::shared_ptr<Team>> teams_;
 };

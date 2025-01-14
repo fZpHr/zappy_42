@@ -10,12 +10,14 @@ class NetworkManager;
 
 class Client {
 	public:
-		explicit Client(std::shared_ptr<SocketHandler> socket_handler, Team team);
+		explicit Client(std::shared_ptr<SocketHandler> socket_handler);
 		void send_message_to(const std::string& message);
 		void receive_message_from();
 		void disconnect();
 		
 		size_t get_id() const;
+		string get_team_name() const;
+		void set_team(Team team);
 		bool is_connected() const;
 
 		static void initialize_available_ids(size_t max_clients);

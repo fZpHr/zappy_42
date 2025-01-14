@@ -75,6 +75,7 @@ int main(int argc, char** argv) {
         if (clients % num_teams != 0) {
             size_t adjusted_clients = (clients / num_teams) * num_teams;
             ERROR("Number of clients must be a multiple of the number of teams. Adjusting to " + to_string(adjusted_clients));
+            vm.at("clients") = boost::program_options::variable_value(adjusted_clients, false);
             clients = adjusted_clients;
         }
 
