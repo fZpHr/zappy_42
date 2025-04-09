@@ -1,7 +1,7 @@
 #include "../../include/core/Client.hpp"
 
-Client::Client(std::shared_ptr<SocketHandler> socket_handler)  {
-    socket_handler_ = socket_handler;
+Client::Client(std::shared_ptr<SocketHandler> socket_handler, std::vector<std::shared_ptr<Team>>& teams)
+    : socket_handler_(socket_handler), teams_(teams) {
     id_ = *available_ids_.begin();
     available_ids_.erase(id_);
 }
@@ -17,7 +17,8 @@ void Client::send_message_to(const std::string& message) {
 }
 
 void Client::receive_message_from() {
-    socket_handler_->async_read(id_);
+    auto shared_this = shared_from_this();
+    socket_handler_->async_read(shared_this); 
 }
 
 bool Client::is_connected() const {

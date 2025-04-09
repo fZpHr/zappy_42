@@ -9,6 +9,8 @@
 #include "../network/NetworkManager.hpp"
 #include "Client.hpp"
 #include "Map.hpp"
+#include <thread>
+#include <fstream>
 
 class Server {
     public:

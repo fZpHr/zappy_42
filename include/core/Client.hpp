@@ -6,11 +6,13 @@
 #include "Team.hpp"
 #include "../network/SocketHandler.hpp"
 
+class SocketHandler; 
+
 class NetworkManager;
 
-class Client {
+class Client : public std::enable_shared_from_this<Client> {
 	public:
-		explicit Client(std::shared_ptr<SocketHandler> socket_handler);
+		Client(std::shared_ptr<SocketHandler> socket_handler, std::vector<std::shared_ptr<Team>>& teams);
 		void send_message_to(const std::string& message);
 		void receive_message_from();
 		void disconnect();
@@ -27,4 +29,5 @@ class Client {
 		static std::set<size_t> available_ids_;
 		size_t x,y;
 		string team_name;
+		std::vector<std::shared_ptr<Team>>& teams_;
 };

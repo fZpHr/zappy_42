@@ -11,7 +11,7 @@ class Map {
         void generateMap();
         void placeTeams();
         void placeResources();
-        void printMap();
+        void printMap(std::ostream &os);
     private:
         size_t width_;
         size_t height_;

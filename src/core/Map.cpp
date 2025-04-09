@@ -1,46 +1,35 @@
 #include "../../include/core/Map.hpp"
 
 Map::Map(size_t width, size_t height, std::vector<std::shared_ptr<Client>> &clients, std::vector<std::shared_ptr<Team>> &teams) : width_(width), height_(height), clients_(clients), teams_(teams) {
-    // generateMap();
+    generateMap(); 
 }
 
-void Map::printMap() {
+void Map::printMap(std::ostream &os) {
     for (size_t i = 0; i < height_; i++) {
         for (size_t j = 0; j < width_; j++) {
-            std::cout << map_[i][j] << " ";
+            os << map_[i][j] << " ";
         }
-        std::cout << std::endl;
+        os << std::endl;
     }
 }
 
 void Map::placeTeams() {
+    DEBUG("Placing teams on the map...");
     std::vector<std::pair<int, int>> positions;
-    
+    DEBUG(std::to_string(teams_.size()).c_str());
     for (size_t i = 0; i < teams_.size(); i++) {
-        int best_x = 0, best_y = 0;
-        double max_min_distance = 0;
-        
-        for (size_t x = 0; x < width_; x++) {
-            for (size_t y = 0; y < height_; y++) {
-                double min_distance = std::numeric_limits<double>::max();
-                
-                for (const auto& pos : positions) {
-                    double dist = std::sqrt(std::pow(x - pos.first, 2) + 
-                                          std::pow(y - pos.second, 2));
-                    min_distance = std::min(min_distance, dist);
-                }
-                
-                if (min_distance > max_min_distance) {
-                    max_min_distance = min_distance;
-                    best_x = x;
-                    best_y = y;
-                }
-            }
-        }
-        
-        positions.push_back({best_x, best_y});
-        teams_[i]->set_x(best_x);
-        teams_[i]->set_y(best_y);
+        DEBUG("Placing team " + std::to_string(i + 1) + "...");
+        int x, y;
+
+        do {
+            x = rand() % width_;
+            y = rand() % height_;
+        } while (map_[y][x] != "0");
+
+        DEBUG("Random position for team " + std::to_string(i + 1) + ": (" + std::to_string(x) + ", " + std::to_string(y) + ")");
+        map_[y][x] = std::to_string(i + 1);
+        teams_[i]->set_x(x);
+        teams_[i]->set_y(y);
     }
 }
 
@@ -51,8 +40,8 @@ void Map::placeResources() {
         int x = rand() % width_;
         int y = rand() % height_;
         
-        if (map_[y][x] == "empty") {
-            map_[y][x] = "food";
+        if (map_[y][x] == "0") {
+            map_[y][x] = "F";
         }
     }
 }
@@ -62,11 +51,9 @@ void Map::generateMap() {
     for (size_t i = 0; i < height_; i++) {
         map_[i].resize(width_);
         for (size_t j = 0; j < width_; j++) {
-            map_[i][j] = "empty";
+            map_[i][j] = "0";
         }
     }
-    
-    placeTeams();
     placeResources();
 }
 

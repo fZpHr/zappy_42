@@ -5,7 +5,7 @@ YELLOW = \033[33m
 GREEN = \033[32m
 
 CXX = g++
-CXXFLAGS = -Wall -Wextra -I./include -std=c++20
+CXXFLAGS = -Wall -Wextra -I./include -std=c++20 -g
 LDFLAGS = -lboost_system -lboost_program_options
 #lgtest -lgtest_main
 
