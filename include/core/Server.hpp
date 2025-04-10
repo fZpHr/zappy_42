@@ -31,7 +31,7 @@ class Server {
         bool running_ = false;
         static std::atomic<bool> signal_received;
         const boost::program_options::variables_map settings_;
-        Map map_;
+        std::shared_ptr<Map> map_;
         std::unique_ptr<NetworkManager> network_manager_;
         
 };

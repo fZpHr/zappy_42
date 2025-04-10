@@ -12,6 +12,7 @@ class Map {
         void placeTeams();
         void placeResources();
         void printMap(std::ostream &os);
+        std::string serialize() const;
     private:
         size_t width_;
         size_t height_;

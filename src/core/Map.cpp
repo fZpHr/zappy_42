@@ -57,3 +57,35 @@ void Map::generateMap() {
     placeResources();
 }
 
+std::string Map::serialize() const {
+    std::string json = "{\n";
+    
+    json += "  \"width\": " + std::to_string(width_) + ",\n";
+    json += "  \"height\": " + std::to_string(height_) + ",\n";
+    
+    json += "  \"cells\": [\n";
+    for (size_t y = 0; y < map_.size(); ++y) {
+        json += "    [";
+        for (size_t x = 0; x < map_[y].size(); ++x) {
+            json += "\"" + map_[y][x] + "\"";
+            if (x < map_[y].size() - 1) json += ", ";
+        }
+        json += "]";
+        if (y < map_.size() - 1) json += ",";
+        json += "\n";
+    }
+    json += "  ],\n";
+    
+    json += "  \"teams\": [\n";
+    for (size_t i = 0; i < teams_.size(); ++i) {
+        json += "    {\n";
+        json += "      \"name\": \"" + teams_[i]->get_name() + "\",\n";
+        json += "      \"position\": [" + std::to_string(teams_[i]->get_x()) + ", " + std::to_string(teams_[i]->get_y()) + "]\n";
+        json += "    }";
+        if (i < teams_.size() - 1) json += ",";
+        json += "\n";
+    }
+    json += "  ]\n";
+    json += "}\n";
+    return json;
+}
