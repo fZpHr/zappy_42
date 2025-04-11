@@ -73,9 +73,9 @@ graph TD
     classDef doing fill:#FFB6C1,color:#000000
     classDef todo fill:#D3D3D3,color:#000000
     
-    class S1,S2,S3 done
-    class S4 doing
-    class S5,G1,G2,G3,G4,G5,CM1,CM2,CM3,CM4,CM5,P1,P2,P3,P4,AI1,AI2,AI3,GUI1,GUI2,B1,B2,B3,B4,B5 todo
+    class S1,S2,S3,P1,AI1 done
+    class S4,G1,G2,G3,P2,AI2 doing
+    class S5,G4,G5,CM1,CM2,CM3,CM4,CM5,P3,P4,AI3,GUI1,GUI2,B1,B2,B3,B4,B5 todo
 ```
 
 ## Project Structure
