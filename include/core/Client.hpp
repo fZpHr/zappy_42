@@ -21,7 +21,7 @@ class Client : public std::enable_shared_from_this<Client> {
 		string get_team_name() const;
 		void set_team(Team team);
 		bool is_connected() const;
-
+		void set_disconnect_callback(std::function<void()> callback);
 		static void initialize_available_ids(size_t max_clients);
 	private:
 		std::shared_ptr<SocketHandler> socket_handler_;
@@ -30,4 +30,5 @@ class Client : public std::enable_shared_from_this<Client> {
 		size_t x,y;
 		string team_name;
 		std::vector<std::shared_ptr<Team>>& teams_;
+		std::function<void()> disconnect_callback_;
 };

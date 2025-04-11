@@ -30,8 +30,15 @@ size_t Client::get_id() const {
 }
 
 void Client::disconnect() {
+    if (disconnect_callback_) {
+        disconnect_callback_();
+    }
     socket_handler_->close();
     available_ids_.insert(id_);
+}
+
+void Client::set_disconnect_callback(std::function<void()> callback) {
+    disconnect_callback_ =  std::move(callback);
 }
 
 void Client::initialize_available_ids(size_t max_clients) {
