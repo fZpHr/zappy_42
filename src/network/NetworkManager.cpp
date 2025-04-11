@@ -3,7 +3,7 @@
 NetworkManager::NetworkManager(const size_t main_port, const size_t graphical_port, const size_t &max_clients, const std::vector<std::shared_ptr<Team>> &teams, const std::shared_ptr<Map> &map)
     : main_acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), main_port)),
       graphical_acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), graphical_port)),
-      max_clients_(max_clients), teams_(teams), map_(map) {
+      max_clients_(max_clients), teams_(teams), map_(map), map_update_timer_(io_context_) {
 }
 
 void NetworkManager::start() {
@@ -27,15 +27,6 @@ void NetworkManager::accept_connection(){
         if (!error) {
             if (clients_.size() < max_clients_ ) {
                 auto client = std::make_shared<Client>(socket, teams_);
-                // size_t team_index = client->get_id() % teams_.size();
-                // if (team_index >= teams_.size()) {
-                //     cout << teams_.size() << " ," << team_index << endl;
-                //     ERROR("Team index out of bounds");
-                //     socket->close();
-                //     accept_connection();
-                //     return;
-                // }
-                // client->set_team(*teams_[team_index]);
                 clients_.push_back(client);
                 INFO("Client " + std::to_string(client->get_id()) + " connected from " +
                 socket->get_socket().remote_endpoint().address().to_string() + ":" +
@@ -60,46 +51,24 @@ void NetworkManager::accept_connection(){
     });
 }
 
+
 void NetworkManager::accept_graphical_connection() {
     auto socket = std::make_shared<SocketHandler>(boost::asio::ip::tcp::socket(io_context_), teams_);
     graphical_acceptor_.async_accept(socket->get_socket(), [this, socket](const boost::system::error_code& error) {
         if (!error) {
-            if (graphical_client_ && graphical_client_->is_connected()) {
-                graphical_client_->send_message_to("New graphical client connected, disconnecting you");
+            if (graphical_client_) {
+                graphical_client_->send_message_to("Another client is taking over");
                 graphical_client_->disconnect();
+                map_update_timer_.cancel();
             }
 
             graphical_client_ = std::make_shared<Client>(socket, teams_);
-            INFO("Graphical client " + std::to_string(graphical_client_->get_id()) + " connected");
-
-            auto send_map_timer = std::make_shared<boost::asio::steady_timer>(io_context_);
-            auto send_map_function = std::make_shared<std::function<void(const boost::system::error_code&)>>();
-            
-            std::weak_ptr<std::function<void(const boost::system::error_code&)>> weak_function = send_map_function;
-            
-            *send_map_function = [this, send_map_timer, weak_function](const boost::system::error_code& ec) {
-                if (auto shared_function = weak_function.lock()) {
-                    if (!ec && graphical_client_ && graphical_client_->is_connected()) {
-                        graphical_client_->send_message_to(map_->serialize());
-                        send_map_timer->expires_after(std::chrono::seconds(5));
-                        if (graphical_client_ && graphical_client_->is_connected()) {
-                            send_map_timer->async_wait(*shared_function);
-                        } else {
-                            INFO("Stopping map updates as the graphical client is disconnected");
-                        }
-                    }
-                }
-            };
+            INFO("Graphical client connected");
             
             graphical_client_->send_message_to(map_->serialize());
-            graphical_client_->receive_message_from();
-
-            graphical_client_->set_disconnect_callback([send_map_timer]() {
-                send_map_timer->cancel();
-            });
-
-            accept_graphical_connection();
-            graphical_client_->send_message_to(map_->serialize());
+            
+            start_map_updates();
+            
             graphical_client_->receive_message_from();
             
             accept_graphical_connection();
@@ -108,6 +77,25 @@ void NetworkManager::accept_graphical_connection() {
             ERROR("Graphical client connection error: " + error.message());
             socket->close();
             accept_graphical_connection();
+        }
+    });
+}
+
+void NetworkManager::start_map_updates() {
+    map_update_timer_.expires_from_now(boost::posix_time::seconds(MAP_UPDATE_INTERVAL));
+    map_update_timer_.async_wait([this](const boost::system::error_code& ec) {
+        if (!ec && graphical_client_ && graphical_client_->is_connected()) {
+            try {
+                graphical_client_->send_message_to(map_->serialize());
+            }
+            catch (const std::exception& e) {
+                ERROR("Send error: " + std::string(e.what()));
+                graphical_client_->disconnect();
+            }
+            start_map_updates();
+        }
+        else if (ec != boost::asio::error::operation_aborted) {
+            ERROR("Update error: " + ec.message());
         }
     });
 }

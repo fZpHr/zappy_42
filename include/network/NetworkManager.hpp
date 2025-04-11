@@ -5,6 +5,7 @@
 #include "../core/Map.hpp"
 #include "../lib.hpp"
 
+
 class NetworkManager {
     public:
         NetworkManager(const size_t main_port, const size_t graphical_port, const size_t &max_clients, const std::vector<std::shared_ptr<Team>> &teams, const std::shared_ptr<Map> &map);
@@ -16,6 +17,7 @@ class NetworkManager {
         
 
     private:
+        void start_map_updates();
         void accept_connection();
         void accept_graphical_connection();
         boost::asio::io_context io_context_;
@@ -26,4 +28,6 @@ class NetworkManager {
         std::shared_ptr<Client> graphical_client_;
         std::vector<std::shared_ptr<Team>> teams_;
         std::shared_ptr<Map> map_;
+        const int MAP_UPDATE_INTERVAL = 1;
+        boost::asio::deadline_timer map_update_timer_;
 };
