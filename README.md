@@ -18,14 +18,14 @@ graph TD
             S1[Arguments Parser ✓]
             S2[Socket Handler ✓]
             S3[Event Loop ✓]
-            S4[Command Buffer]
+            S4[Command Buffer ✓]
             S5[Time Management]
         end
 
         subgraph Game[Game Logic]
-            G1[World Generation]
-            G2[Team Management]
-            G3[Resource System]
+            G1[World Generation ✓]
+            G2[Team Management ✓]
+            G3[Resource System ✓]
             G4[Life System]
             G5[Egg System]
         end
@@ -39,15 +39,15 @@ graph TD
         end
 
         subgraph Protocol[Communication]
-            P1[Welcome]
-            P2[Commands]
+            P1[Welcome ✓]
+            P2[Commands ✓]
             P3[Responses]
             P4[Messages]
         end
 
         subgraph Clients[Clients]
-            AI1[Team Connection]
-            AI2[Commands]
+            AI1[Team Connection ✓]
+            AI2[Commands ✓]
             AI3[Behavior]
             GUI1[2D Map]
             GUI2[Progress]
@@ -82,6 +82,7 @@ graph TD
 ```
 zappy_42/
 ├── Makefile
+├── AI
 ├── include/
 │   ├── core/
 │   │   ├── Server.hpp
