@@ -1,0 +1,38 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ libboost-system-dev libboost-program-options-dev
+        sudo apt-get install -y libgtest-dev
+        cd /usr/src/gtest
+        sudo cmake .
+        sudo make
+        sudo cp lib/*.a /usr/lib
+    
+    - name: Build project
+      run: make
+    
+    - name: Run unit tests
+      run: make tests
+    
+    # Optional: Run valgrind tests if you want memory checking in CI
+    # Note: This will be slower and might need additional configuration
+    - name: Install valgrind
+      run: sudo apt-get install -y valgrind
+    
+    - name: Run valgrind tests
+      run: make valgrind-tests
