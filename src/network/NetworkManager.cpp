@@ -1,9 +1,14 @@
 #include "../../include/network/NetworkManager.hpp"
 
-NetworkManager::NetworkManager(const size_t main_port, const size_t graphical_port, const size_t &max_clients, const std::vector<std::shared_ptr<Team>> &teams, const std::shared_ptr<Map> &map)
+NetworkManager::NetworkManager(const size_t main_port, const size_t graphical_port,  const size_t &max_clients,  std::vector<std::shared_ptr<Team>> &teams,  std::shared_ptr<Map> &map,  std::vector<std::shared_ptr<Client>> &clients)
     : main_acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), main_port)),
       graphical_acceptor_(io_context_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), graphical_port)),
-      max_clients_(max_clients), teams_(teams), map_(map), map_update_timer_(io_context_) {
+      max_clients_(max_clients),
+      clients_(clients),
+      teams_(teams),
+      map_(map),
+      map_update_timer_(io_context_) {
+    INFO("NetworkManager initialized on ports " + std::to_string(main_port) + " and " + std::to_string(graphical_port));
 }
 
 void NetworkManager::start() {
@@ -11,8 +16,20 @@ void NetworkManager::start() {
     accept_graphical_connection();
 }
 
-void NetworkManager::stop(){
-    io_context_.stop();
+void NetworkManager::stop() {
+    try {
+        boost::system::error_code ec;
+        
+        main_acceptor_.cancel(ec);
+        graphical_acceptor_.cancel(ec);
+        
+        main_acceptor_.close(ec);
+        graphical_acceptor_.close(ec);
+        
+        io_context_.stop();
+    } catch (...) {
+        ERROR("Error while stopping NetworkManager");
+    }
 }
 
 void NetworkManager::broadcast(const std::string& message){
@@ -36,7 +53,9 @@ void NetworkManager::accept_connection(){
                 std::to_string(socket->get_socket().local_endpoint().port()));
                 client->send_message_to("Welcome to the server");
                 client->receive_message_from();
+                LOG("Client size: " + std::to_string(clients_.size()));
                 accept_connection();
+                
             }
             else {
                 ERROR("Client trying to connect from " +

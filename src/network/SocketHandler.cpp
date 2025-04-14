@@ -45,7 +45,11 @@ bool SocketHandler::is_open() const {
 }
 
 void SocketHandler::close() {
-    socket_.close();
+    if (socket_.is_open()) {
+        boost::system::error_code ec;
+        socket_.cancel(ec);
+        socket_.close(ec);
+    }
 }
 
 boost::asio::ip::tcp::socket& SocketHandler::get_socket() {

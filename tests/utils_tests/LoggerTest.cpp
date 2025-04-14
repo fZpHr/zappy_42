@@ -3,8 +3,8 @@
 
 TEST(LoggerTest, LogLevels) {
    EXPECT_NO_THROW({
-       zappy::utils::Logger::info("Info message");
-       zappy::utils::Logger::error("Error message");
-       zappy::utils::Logger::debug("Debug message");
+     Logger::info("Info message");
+     Logger::error("Error message");
+     Logger::debug("Debug message");
    });
 }

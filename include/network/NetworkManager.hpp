@@ -8,7 +8,7 @@
 
 class NetworkManager {
     public:
-        NetworkManager(const size_t main_port, const size_t graphical_port, const size_t &max_clients, const std::vector<std::shared_ptr<Team>> &teams, const std::shared_ptr<Map> &map);
+        NetworkManager(const size_t main_port, const size_t graphical_port,  const size_t &max_clients,  std::vector<std::shared_ptr<Team>> &teams,  std::shared_ptr<Map> &map,  std::vector<std::shared_ptr<Client>> &clients);
         void start();
         void stop();
         std::shared_ptr<Client> accept();
@@ -24,10 +24,10 @@ class NetworkManager {
         boost::asio::ip::tcp::acceptor main_acceptor_;
         boost::asio::ip::tcp::acceptor graphical_acceptor_;
         const size_t max_clients_;
-        std::vector<std::shared_ptr<Client>> clients_;
+        std::vector<std::shared_ptr<Client>> &clients_;
         std::shared_ptr<Client> graphical_client_;
-        std::vector<std::shared_ptr<Team>> teams_;
-        std::shared_ptr<Map> map_;
+        std::vector<std::shared_ptr<Team>> &teams_;
+        std::shared_ptr<Map> &map_;
         const int MAP_UPDATE_INTERVAL = 1;
         boost::asio::deadline_timer map_update_timer_;
 };
