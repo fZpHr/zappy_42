@@ -29,8 +29,6 @@ jobs:
     - name: Run unit tests
       run: make tests
     
-    # Optional: Run valgrind tests if you want memory checking in CI
-    # Note: This will be slower and might need additional configuration
     - name: Install valgrind
       run: sudo apt-get install -y valgrind
     
